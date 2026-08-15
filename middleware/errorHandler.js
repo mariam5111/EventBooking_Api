@@ -1,71 +1,40 @@
-const AppError = require("../utils/appError");
-
-
-const handleCastErrorDB = (err) => {
-  const message = `Invalid ${err.path}: ${err.value}`;
-  return new AppError(message, 400);
-};
-
-
-const handleDuplicateFieldsDB = (err) => {
-  const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
-  const message = `Duplicate field value: ${value}. Please use another value!`;
-  return new AppError(message, 400);
-};
-
-
-const handleValidationErrorDB = (err) => {
-  const errors = Object.values(err.errors).map((el) => el.message);
-  const message = `Invalid input data: ${errors.join(". ")}`;
-  return new AppError(message, 400);
-};
-
-const sendErrorDev = (err, res) => {
-  res.status(err.statusCode).json({
-    success: false,
-    status: err.status,
-    error: err,
-    message: err.message,
-    stack: err.stack,
-  });
-};
-
-
-const sendErrorProd = (err, res) => {
- 
-  if (err.isOperational) {
-    res.status(err.statusCode).json({
-      success: false,
-      status: err.status,
-      message: err.message,
-    });
-  } else {
-    
-    console.error("ERROR :", err);
-    res.status(500).json({
-      success: false,
-      status: "error",
-      message: "Something went very wrong!",
-    });
-  }
-};
+const AppError = require('../utils/appError');
 
 const errorHandler = (err, req, res, next) => {
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || "error";
+  let error = { ...err };
+  error.message = err.message;
+  error.statusCode = err.statusCode || 500;
 
-  if (process.env.NODE_ENV === "development") {
-    sendErrorDev(err, res);
-  } else {
-    let error = { ...err };
-    error.message = err.message;
-
-    if (error.name === "CastError") error = handleCastErrorDB(error);
-    if (error.code === 11000) error = handleDuplicateFieldsDB(error);
-    if (error.name === "ValidationError") error = handleValidationErrorDB(error);
-
-    sendErrorProd(error, res);
+  
+  if (err.name === 'CastError') {
+    const message = `Invalid ${err.path}: ${err.value}`;
+    error = new AppError(message, 400);
   }
+
+
+  if (err.code === 11000) {
+    const field = err.keyValue ? Object.keys(err.keyValue)[0] : 'Field';
+    const message = `${field.charAt(0).toUpperCase() + field.slice(1)} already exists.`;
+    error = new AppError(message, 409);
+  }
+
+ 
+  if (err.isJoi) {
+    const message = err.details.map((detail) => detail.message).join('. ');
+    error = new AppError(message, 400);
+  } 
+
+  else if (err.name === 'ValidationError') {
+    const messages = Object.values(err.errors).map((el) => el.message);
+    const message = `Invalid input data: ${messages.join('. ')}`;
+    error = new AppError(message, 400);
+  }
+
+ 
+  res.status(error.statusCode).json({
+    success: false,
+    message: error.message || 'Internal Server Error'
+  });
 };
 
 module.exports = errorHandler;
