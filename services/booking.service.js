@@ -1,21 +1,19 @@
 const Booking = require("../models/booking.model");
 const Event = require("../models/event.model");
-
+const AppError = require("../utils/appError");
 
 const createBooking = async (userId, eventId, seats) => {
   const event = await Event.findById(eventId);
 
   if (!event) {
-    throw new Error("Event not found");
+    throw new AppError("Event not found", 404);
   }
 
   if (event.availableSeats < seats) {
-    throw new Error("Not enough available seats");
+    throw new AppError("Not enough available seats", 400);
   }
 
- 
   event.availableSeats -= seats;
-
   await event.save();
 
   try {
@@ -28,7 +26,7 @@ const createBooking = async (userId, eventId, seats) => {
 
     return booking;
   } catch (error) {
-    
+
     event.availableSeats += seats;
     await event.save();
 
@@ -37,18 +35,14 @@ const createBooking = async (userId, eventId, seats) => {
 };
 
 const getMyBookings = async (userId) => {
-  return await Booking.find({
-    user: userId,
-  })
+  return await Booking.find({ user: userId })
     .populate("event")
     .populate("user", "name email role")
     .sort({ createdAt: -1 });
 };
 
-const getBookingById = async (bookingId) => {
-  return await Booking.findById(bookingId)
-    .populate("event")
-    .populate("user", "name email role");
+const getBookingById = async (id) => {
+  return await Booking.findById(id).populate("event");
 };
 
 const getAllBookings = async () => {
@@ -62,31 +56,26 @@ const updateBooking = async (bookingId, userId, role, newSeats) => {
   const booking = await Booking.findById(bookingId);
 
   if (!booking) {
-    throw new Error("Booking not found");
+    throw new AppError("Booking not found", 404);
   }
 
-  if (
-    role === "User" &&
-    booking.user.toString() !== userId.toString()
-  ) {
-    throw new Error("You can only update your own booking");
-  }
+  
 
   if (booking.status === "cancelled") {
-    throw new Error("Cancelled booking cannot be updated");
+    throw new AppError("Cancelled booking cannot be updated", 400);
   }
 
   const event = await Event.findById(booking.event);
 
   if (!event) {
-    throw new Error("Event not found");
+    throw new AppError("Event not found", 404);
   }
 
   const difference = newSeats - booking.seats;
 
   if (difference > 0) {
     if (event.availableSeats < difference) {
-      throw new Error("Not enough available seats");
+      throw new AppError("Not enough available seats", 400);
     }
 
     event.availableSeats -= difference;
@@ -104,33 +93,26 @@ const updateBooking = async (bookingId, userId, role, newSeats) => {
   return booking;
 };
 
-
 const cancelBooking = async (bookingId, userId, role) => {
   const booking = await Booking.findById(bookingId);
 
   if (!booking) {
-    throw new Error("Booking not found");
+    throw new AppError("Booking not found", 404);
   }
 
-  if (
-    role === "User" &&
-    booking.user.toString() !== userId.toString()
-  ) {
-    throw new Error("You can only cancel your own booking");
-  }
+
 
   if (booking.status === "cancelled") {
-    throw new Error("Booking is already cancelled");
+    throw new AppError("Booking is already cancelled", 400);
   }
 
   const event = await Event.findById(booking.event);
 
   if (!event) {
-    throw new Error("Event not found");
+    throw new AppError("Event not found", 404);
   }
 
   event.availableSeats += booking.seats;
-
   booking.status = "cancelled";
 
   await event.save();
@@ -139,16 +121,14 @@ const cancelBooking = async (bookingId, userId, role) => {
   return booking;
 };
 
-
 const deleteBooking = async (bookingId) => {
   const booking = await Booking.findById(bookingId);
 
   if (!booking) {
-    throw new Error("Booking not found");
+    throw new AppError("Booking not found", 404);
   }
 
   const event = await Event.findById(booking.event);
-
 
   if (event && booking.status === "confirmed") {
     event.availableSeats += booking.seats;
@@ -159,7 +139,6 @@ const deleteBooking = async (bookingId) => {
 
   return booking;
 };
-
 
 module.exports = {
   createBooking,

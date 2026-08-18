@@ -43,7 +43,12 @@ const getEvent = async (req, res, next) => {
 
 const updateEvent = async (req, res, next) => {
   try {
-    const event = await eventService.updateEvent(req.params.id, req.body);
+    const event = await eventService.updateEvent(
+      req.params.id,
+      req.body,
+      req.user._id,
+      req.user.role
+    );
 
     res.status(200).json({
       success: true,
@@ -57,7 +62,11 @@ const updateEvent = async (req, res, next) => {
 
 const deleteEvent = async (req, res, next) => {
   try {
-    await eventService.deleteEvent(req.params.id);
+    await eventService.deleteEvent(
+      req.params.id,
+      req.user._id,
+      req.user.role
+    );
 
     res.status(200).json({
       success: true,

@@ -1,6 +1,21 @@
 const bookingService = require("../services/booking.service");
 const AppError = require("../utils/appError");
 
+
+const checkBookingAuthorization = (booking, user) => {
+  const isOwner = booking.user._id.toString() === user._id.toString();
+  
+  
+  const isEventOrganizer =
+    booking.event &&
+    booking.event.createdBy &&
+    booking.event.createdBy.toString() === user._id.toString();
+    
+  const isAdmin = user.role === "Admin";
+
+  return isOwner || isEventOrganizer || isAdmin;
+};
+
 const createBooking = async (req, res, next) => {
   try {
     const { eventId, seats } = req.body;
@@ -21,7 +36,6 @@ const createBooking = async (req, res, next) => {
   }
 };
 
-
 const getMyBookings = async (req, res, next) => {
   try {
     const bookings = await bookingService.getMyBookings(req.user._id);
@@ -36,7 +50,6 @@ const getMyBookings = async (req, res, next) => {
   }
 };
 
-
 const getBookingById = async (req, res, next) => {
   try {
     const booking = await bookingService.getBookingById(req.params.id);
@@ -45,11 +58,11 @@ const getBookingById = async (req, res, next) => {
       return next(new AppError("Booking not found", 404));
     }
 
-    if (
-      req.user.role === "User" &&
-      booking.user._id.toString() !== req.user._id.toString()
-    ) {
-      return next(new AppError("You can only view your own booking", 403));
+    
+    if (!checkBookingAuthorization(booking, req.user)) {
+      return next(
+        new AppError("You are not authorized to view this booking", 403)
+      );
     }
 
     res.status(200).json({
@@ -60,7 +73,6 @@ const getBookingById = async (req, res, next) => {
     next(error);
   }
 };
-
 
 const getAllBookings = async (req, res, next) => {
   try {
@@ -76,12 +88,23 @@ const getAllBookings = async (req, res, next) => {
   }
 };
 
-
 const updateBooking = async (req, res, next) => {
   try {
     const { seats } = req.body;
+    const booking = await bookingService.getBookingById(req.params.id);
 
-    const booking = await bookingService.updateBooking(
+    if (!booking) {
+      return next(new AppError("Booking not found", 404));
+    }
+
+    // 🔐 التحقق قبل التعديل
+    if (!checkBookingAuthorization(booking, req.user)) {
+      return next(
+        new AppError("You are not authorized to update this booking", 403)
+      );
+    }
+
+    const updatedBooking = await bookingService.updateBooking(
       req.params.id,
       req.user._id,
       req.user.role,
@@ -91,7 +114,7 @@ const updateBooking = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Booking updated successfully",
-      data: booking,
+      data: updatedBooking,
     });
   } catch (error) {
     next(error);
@@ -100,7 +123,19 @@ const updateBooking = async (req, res, next) => {
 
 const cancelBooking = async (req, res, next) => {
   try {
-    const booking = await bookingService.cancelBooking(
+    const booking = await bookingService.getBookingById(req.params.id);
+
+    if (!booking) {
+      return next(new AppError("Booking not found", 404));
+    }
+
+    if (!checkBookingAuthorization(booking, req.user)) {
+      return next(
+        new AppError("You are not authorized to cancel this booking", 403)
+      );
+    }
+
+    const cancelledBooking = await bookingService.cancelBooking(
       req.params.id,
       req.user._id,
       req.user.role
@@ -109,13 +144,12 @@ const cancelBooking = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Booking cancelled successfully",
-      data: booking,
+      data: cancelledBooking,
     });
   } catch (error) {
     next(error);
   }
 };
-
 
 const deleteBooking = async (req, res, next) => {
   try {

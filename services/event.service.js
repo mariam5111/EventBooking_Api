@@ -26,14 +26,19 @@ const getEventById = async (eventId) => {
   if (!event) {
     throw new AppError("Event not found", 404);
   }
+  
   return event;
 };
 
-const updateEvent = async (eventId, updateData) => {
+const updateEvent = async (eventId, updateData, userId, userRole) => {
   const event = await Event.findById(eventId);
   if (!event) {
     throw new AppError("Event not found", 404);
   }
+   if (userRole !== "Admin" && event.createdBy.toString() !== userId.toString()) {
+    throw new AppError("You are not authorized to update this event", 403);
+  }
+
 
   const { title, details, date, totalSeats } = updateData;
 
@@ -59,16 +64,19 @@ const updateEvent = async (eventId, updateData) => {
   return event;
 };
 
-const deleteEvent = async (eventId) => {
+const deleteEvent = async (eventId, userId, userRole) => {
   const event = await Event.findById(eventId);
   if (!event) {
     throw new AppError("Event not found", 404);
   }
 
+  if (userRole !== "Admin" && event.createdBy.toString() !== userId.toString()) {
+    throw new AppError("You are not authorized to delete this event", 403);
+  }
+
   await event.deleteOne();
   return event;
 };
-
 module.exports = {
   createEvent,
   getAllEvents,
