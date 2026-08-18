@@ -96,7 +96,7 @@ A robust, secure, and scalable RESTful API built with **Node.js**, **Express.js*
 
 3. **Configure Environment Variables:**
    Create a `.env` file in the root directory:
-   ike .env.example  in the root directory
+   like ` .env.example`  in the root directory
 
 
 4. **Run the application:**
