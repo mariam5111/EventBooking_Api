@@ -85,8 +85,8 @@ A robust, secure, and scalable RESTful API built with **Node.js**, **Express.js*
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/your-username/event-booking-api.git](https://github.com/your-username/event-booking-api.git)
-   cd event-booking-api
+   git clone (https://github.com/mariam5111/EventBooking_Api.git)
+   cd EventBooking_Api
    ```
 
 2. **Install dependencies:**
@@ -96,8 +96,8 @@ A robust, secure, and scalable RESTful API built with **Node.js**, **Express.js*
 
 3. **Configure Environment Variables:**
    Create a `.env` file in the root directory:
-   ```like .env.example  in the root directory
-   ```
+   ike .env.example  in the root directory
+
 
 4. **Run the application:**
    ```bash
