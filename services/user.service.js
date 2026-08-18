@@ -17,7 +17,7 @@ const registerUser = async (userData) => {
     name,
     email,
     password,
-    role, 
+    role: "User",
   });
 
 
