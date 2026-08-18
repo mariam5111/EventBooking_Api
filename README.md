@@ -110,37 +110,6 @@ A robust, secure, and scalable RESTful API built with **Node.js**, **Express.js*
 
 ---
 
-## 📌 API Endpoints
-
-### 🔑 Authentication (`/api/users`)
-| Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/register` | Register a new user | Public |
-| `POST` | `/login` | User login & receive JWT token | Public |
-| `GET` | `/profile` | Get current logged-in user profile | Authenticated |
-
-### 📅 Events (`/api/events`)
-| Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/` | Get all events | Public |
-| `GET` | `/:id` | Get single event details | Public |
-| `POST` | `/` | Create a new event | Organizer / Admin |
-| `PATCH` | `/:id` | Update event details | Organizer / Admin |
-| `DELETE` | `/:id` | Delete an event | Organizer / Admin |
-
-### 🎟️ Bookings (`/api/bookings`)
-| Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/` | Create a booking | User |
-| `GET` | `/my-bookings` | Get logged-in user's bookings | User |
-| `GET` | `/:id` | Get booking by ID | Owner / Admin |
-| `GET` | `/` | Get all bookings in system | Admin |
-| `PATCH` | `/:id` | Update seats for a booking | Owner / Admin |
-| `PATCH` | `/:id/cancel` | Cancel a booking | Owner / Admin |
-| `DELETE` | `/:id` | Delete a booking record | Admin |
-
----
-
 ## 🧪 Testing with Postman
 
 1. **Register User:** Send `POST /api/users/register` (Role defaults strictly to `User`).
