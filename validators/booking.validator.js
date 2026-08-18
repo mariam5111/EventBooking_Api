@@ -1,62 +1,55 @@
-const mongoose = require("mongoose");
+const Joi = require("joi");
+const AppError = require("../utils/appError");
 
-const createBookingValidator = (req, res, next) => {
-  const { eventId, seats } = req.body;
 
-  if (!eventId) {
-    return res.status(400).json({
-      success: false,
-      message: "Event ID is required",
-    });
+const createBookingSchema = Joi.object({
+  eventId: Joi.string()
+    .hex()
+    .length(24)
+    .required()
+    .messages({
+      "string.empty": "Event ID is required",
+      "string.hex": "Invalid Event ID format",
+      "string.length": "Invalid Event ID length",
+      "any.required": "Event ID is required",
+    }),
+  seats: Joi.number()
+    .integer()
+    .min(1)
+    .required()
+    .messages({
+      "number.base": "Seats must be a number",
+      "number.integer": "Seats must be an integer",
+      "number.min": "Seats must be at least 1",
+      "any.required": "Number of seats is required",
+    }),
+});
+
+const updateBookingSchema = Joi.object({
+  seats: Joi.number()
+    .integer()
+    .min(1)
+    .required()
+    .messages({
+      "number.base": "Seats must be a number",
+      "number.integer": "Seats must be an integer",
+      "number.min": "Seats must be at least 1",
+      "any.required": "Seats is required",
+    }),
+});
+
+
+const validate = (schema) => (req, res, next) => {
+  const { error } = schema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errorMessage = error.details.map((detail) => detail.message).join(", ");
+    return next(new AppError(errorMessage, 400));
   }
-
-  if (!mongoose.Types.ObjectId.isValid(eventId)) {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid Event ID",
-    });
-  }
-
-  if (!seats) {
-    return res.status(400).json({
-      success: false,
-      message: "Number of seats is required",
-    });
-  }
-
-  if (!Number.isInteger(seats) || seats < 1) {
-    return res.status(400).json({
-      success: false,
-      message: "Seats must be a positive integer",
-    });
-  }
-
-  next();
-};
-
-
-const updateBookingValidator = (req, res, next) => {
-  const { seats } = req.body;
-
-  if (seats === undefined) {
-    return res.status(400).json({
-      success: false,
-      message: "Seats is required",
-    });
-  }
-
-  if (!Number.isInteger(seats) || seats < 1) {
-    return res.status(400).json({
-      success: false,
-      message: "Seats must be a positive integer",
-    });
-  }
-
   next();
 };
 
 
 module.exports = {
-  createBookingValidator,
-  updateBookingValidator,
+  createBookingValidator: validate(createBookingSchema),
+  updateBookingValidator: validate(updateBookingSchema),
 };

@@ -1,6 +1,7 @@
 const bookingService = require("../services/booking.service");
+const AppError = require("../utils/appError");
 
-const createBooking = async (req, res) => {
+const createBooking = async (req, res, next) => {
   try {
     const { eventId, seats } = req.body;
 
@@ -13,88 +14,70 @@ const createBooking = async (req, res) => {
     res.status(201).json({
       success: true,
       message: "Booking created successfully",
-      booking,
+      data: booking,
     });
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const getMyBookings = async (req, res) => {
+
+const getMyBookings = async (req, res, next) => {
   try {
-    const bookings = await bookingService.getMyBookings(
-      req.user._id
-    );
+    const bookings = await bookingService.getMyBookings(req.user._id);
 
     res.status(200).json({
       success: true,
       count: bookings.length,
-      bookings,
+      data: bookings,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const getBookingById = async (req, res) => {
+
+const getBookingById = async (req, res, next) => {
   try {
-    const booking = await bookingService.getBookingById(
-      req.params.id
-    );
+    const booking = await bookingService.getBookingById(req.params.id);
 
     if (!booking) {
-      return res.status(404).json({
-        success: false,
-        message: "Booking not found",
-      });
+      return next(new AppError("Booking not found", 404));
     }
 
     if (
       req.user.role === "User" &&
       booking.user._id.toString() !== req.user._id.toString()
     ) {
-      return res.status(403).json({
-        success: false,
-        message: "You can only view your own booking",
-      });
+      return next(new AppError("You can only view your own booking", 403));
     }
 
     res.status(200).json({
       success: true,
-      booking,
+      data: booking,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const getAllBookings = async (req, res) => {
+
+const getAllBookings = async (req, res, next) => {
   try {
     const bookings = await bookingService.getAllBookings();
 
     res.status(200).json({
       success: true,
       count: bookings.length,
-      bookings,
+      data: bookings,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const updateBooking = async (req, res) => {
+
+const updateBooking = async (req, res, next) => {
   try {
     const { seats } = req.body;
 
@@ -108,17 +91,14 @@ const updateBooking = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Booking updated successfully",
-      booking,
+      data: booking,
     });
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const cancelBooking = async (req, res) => {
+const cancelBooking = async (req, res, next) => {
   try {
     const booking = await bookingService.cancelBooking(
       req.params.id,
@@ -129,17 +109,15 @@ const cancelBooking = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Booking cancelled successfully",
-      booking,
+      data: booking,
     });
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const deleteBooking = async (req, res) => {
+
+const deleteBooking = async (req, res, next) => {
   try {
     await bookingService.deleteBooking(req.params.id);
 
@@ -148,13 +126,9 @@ const deleteBooking = async (req, res) => {
       message: "Booking deleted successfully",
     });
   } catch (error) {
-    res.status(404).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
-
 
 module.exports = {
   createBooking,

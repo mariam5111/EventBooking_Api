@@ -9,11 +9,11 @@ const restrictTo = require("../middleware/restrictTo");
 
 const router = express.Router();
 
-// Public routes — anyone can browse events without logging in
+
 router.get("/", eventController.getAllEvents);
 router.get("/:id", eventController.getEvent);
 
-// Protected routes — Organizer/Admin only
+
 router.post(
   "/",
   protect,
