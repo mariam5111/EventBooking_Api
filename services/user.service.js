@@ -4,7 +4,7 @@ const generateToken = require("../utils/generateToken");
 
 
 const registerUser = async (userData) => {
-  const { name, email, password, role } = userData;
+  const { name, email, password } = userData;
 
 
   const existingUser = await User.findOne({ email });

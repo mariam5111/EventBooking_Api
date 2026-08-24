@@ -41,14 +41,22 @@ A robust, secure, and scalable RESTful API built with **Node.js**, **Express.js*
 ## 📁 Project Structure
 
 ```text
+├── config/
+│   └── db.js
 ├── controllers/
-│   ├── auth.controller.js
 │   ├── booking.controller.js
-│   └── event.controller.js
+│   ├── event.controller.js
+│   └── user.controller.js
+├── middleware/
+│   ├── errorHandler.js
+│   ├── protect.js
+|   ├── validate.js
+│   └── restrictTo.js
 ├── models/
 │   ├── booking.model.js
 │   ├── event.model.js
 │   └── user.model.js
+├── node_modules/
 ├── routes/
 │   ├── booking.routes.js
 │   ├── event.routes.js
@@ -57,17 +65,19 @@ A robust, secure, and scalable RESTful API built with **Node.js**, **Express.js*
 │   ├── booking.service.js
 │   ├── event.service.js
 │   └── user.service.js
-├── middlewares/
-│   ├── auth.middleware.js
-│   └── error.middleware.js
 ├── utils/
-│   └── appError.js
+│   ├── appError.js
+│   └── generateToken.js
 ├── validators/
 │   ├── booking.validator.js
 │   ├── event.validator.js
 │   └── user.validator.js
+├── .env
 ├── .env.example
+├── .gitignore
 ├── app.js
+├── package-lock.json
+├── package.json
 ├── server.js
 └── README.md
 ```
