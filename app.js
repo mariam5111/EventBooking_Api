@@ -6,13 +6,17 @@ const userRouter = require("./routes/user.routes");
 const eventRouter = require("./routes/event.routes");
 const bookingRouter = require("./routes/booking.routes");
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
+
+
 
 const errorHandler = require("./middleware/errorHandler");
 const AppError = require("./utils/appError");
 
 const app = express();
 
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(cors());
 app.use(express.json());
 

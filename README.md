@@ -34,7 +34,7 @@ A robust, secure, and scalable RESTful API built with **Node.js**, **Express.js*
 - **Database:** MongoDB & Mongoose ORM
 - **Authentication:** JSON Web Tokens (JWT) & Bcrypt
 - **Validation:** Joi
-- **Tools & Testing:** Postman, MongoDB Compass
+- **Tools & Testing:** Swagger, MongoDB Compass
 
 ---
 
@@ -42,6 +42,7 @@ A robust, secure, and scalable RESTful API built with **Node.js**, **Express.js*
 
 ```text
 ├── config/
+|   ├── swagger.js
 │   └── db.js
 ├── controllers/
 │   ├── booking.controller.js
@@ -72,7 +73,7 @@ A robust, secure, and scalable RESTful API built with **Node.js**, **Express.js*
 │   ├── booking.validator.js
 │   ├── event.validator.js
 │   └── user.validator.js
-├── .env
+|
 ├── .env.example
 ├── .gitignore
 ├── app.js
@@ -105,8 +106,7 @@ A robust, secure, and scalable RESTful API built with **Node.js**, **Express.js*
    ```
 
 3. **Configure Environment Variables:**
-   Create a `.env` file in the root directory:
-   like ` .env.example`  in the root directory
+   Create a `.env` file in the root directory and copy the contents of `.env.example` into it, then fill in your values.
 
 
 4. **Run the application:**
@@ -120,16 +120,5 @@ A robust, secure, and scalable RESTful API built with **Node.js**, **Express.js*
 
 ---
 
-## 🧪 Testing with Postman
-
-1. **Register User:** Send `POST /api/users/register` (Role defaults strictly to `User`).
-2. **Set Roles for Testing:** Modify user roles manually in **MongoDB Compass** (`User` $\rightarrow$ `Organizer` or `Admin`).
-3. **Obtain Token:** Send `POST /api/users/login` and add the returned token to Postman under `Authorization -> Bearer Token`.
-4. **Create Event:** Use an `Organizer` token to `POST /api/events`.
-5. **Book Event:** Use a `User` token to `POST /api/bookings` with the generated `eventId`.
-
----
-
-## 📜 License
-
-This project is open-source and available under the [MIT License](LICENSE).
+5. **Access the API Documentation:**
+   Open your browser and navigate to [http://localhost:5000/api-docs](http://localhost:5000/api-docs) to view the Swagger UI documentation.
