@@ -122,3 +122,16 @@ A robust, secure, and scalable RESTful API built with **Node.js**, **Express.js*
 
 5. **Access the API Documentation:**
    ```Open your browser and navigate to [http://localhost:5000/api-docs](http://localhost:5000/api-docs) to view the Swagger UI documentation.```
+
+---
+
+## 🧪 Testing with Postman
+
+A ready-to-use Postman collection is included in the repo: [`EventBooking_Api.postman_collection.json`](./EventBooking_Api.postman_collection.json).
+
+1. Open Postman and click **Import**, then select `EventBooking_Api.postman_collection.json`.
+2. Check the collection's variables (`baseUrl`, `token`, `refreshToken`, `organizerToken`, `adminToken`, `eventId`, `bookingId`) — `baseUrl` defaults to `http://localhost:5000/api`.
+3. Run **Users → Register User**, then **Users → Login (User)**. The login request automatically saves `{{token}}` and `{{refreshToken}}` for you.
+4. For endpoints restricted to `Organizer`/`Admin`, register a user, promote their `role` directly in MongoDB Compass, then run **Login (Organizer)** / **Login (Admin)** to save `{{organizerToken}}` / `{{adminToken}}`.
+5. Creating an event or a booking automatically saves `{{eventId}}` / `{{bookingId}}` so the rest of the requests in that folder work without manual copy-pasting.
+6. Since `JWT_EXPIRES_IN` is short (15m by default), use **Users → Refresh Access Token** to get a new `{{token}}` without logging in again.
