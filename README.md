@@ -77,6 +77,8 @@ A robust, secure, and scalable RESTful API built with **Node.js**, **Express.js*
 |
 ├── .env.example
 ├── .gitignore
+├── EventBooking_Api.postman_collection.json
+├── eslint.config.mjs
 ├── app.js
 ├── package-lock.json
 ├── package.json
