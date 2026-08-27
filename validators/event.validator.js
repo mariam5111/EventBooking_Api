@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const AppError = require("../utils/appError");
 const validate = require("../middleware/validate");
 
 const createEventSchema = Joi.object({
