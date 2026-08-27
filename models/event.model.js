@@ -25,6 +25,14 @@ const eventSchema = new mongoose.Schema(
       type: Number,
       min: [0, "Available seats cannot be negative"],
     },
+     coverImage: {
+      type: String,
+      default: null,
+    },
+    images: {
+      type: [String],
+      default: [],
+    },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

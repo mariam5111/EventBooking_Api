@@ -1,8 +1,16 @@
 const Event = require("../models/event.model");
 const AppError = require("../utils/appError");
 
-const createEvent = async (eventData, userId) => {
+const createEvent = async (eventData, userId, files) => {
+   if (!files || files.length === 0) {
+    throw new AppError('At least one image is required for the event', 400);
+  }
+
   const { title, details, date, totalSeats } = eventData;
+
+
+  const imageUrls = files ? files.map(file => `/uploads/${file.filename}`) : [];
+  const coverImage = imageUrls.length > 0 ? imageUrls[0] : null;
 
   const event = await Event.create({
     title,
@@ -11,6 +19,8 @@ const createEvent = async (eventData, userId) => {
     totalSeats,
     availableSeats: totalSeats,
     createdBy: userId,
+    coverImage,
+    images: imageUrls,
   });
 
   return event;
@@ -30,7 +40,7 @@ const getEventById = async (eventId) => {
   return event;
 };
 
-const updateEvent = async (eventId, updateData, userId, userRole) => {
+const updateEvent = async (eventId, updateData, userId, userRole, files) => {
   const event = await Event.findById(eventId);
   if (!event) {
     throw new AppError("Event not found", 404);
@@ -58,6 +68,13 @@ const updateEvent = async (eventId, updateData, userId, userRole) => {
 
     event.availableSeats = totalSeats - seatsTaken;
     event.totalSeats = totalSeats;
+  }
+    if (files && files.length > 0) {
+    const newImageUrls = files.map(file => `/uploads/${file.filename}`);
+    event.images = [...event.images, ...newImageUrls];
+    if (!event.coverImage) {
+      event.coverImage = newImageUrls[0];
+    }
   }
 
   await event.save();

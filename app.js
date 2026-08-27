@@ -16,6 +16,7 @@ const AppError = require("./utils/appError");
 
 const app = express();
 
+app.use('/uploads', express.static('uploads'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(cors());
 app.use(express.json());

@@ -2,7 +2,7 @@ const eventService = require("../services/event.service");
 
 const createEvent = async (req, res, next) => {
   try {
-    const event = await eventService.createEvent(req.body, req.user._id);
+    const event = await eventService.createEvent(req.body, req.user._id, req.files);
 
     res.status(201).json({
       success: true,
@@ -47,7 +47,8 @@ const updateEvent = async (req, res, next) => {
       req.params.id,
       req.body,
       req.user._id,
-      req.user.role
+      req.user.role,
+      req.files
     );
 
     res.status(200).json({

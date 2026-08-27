@@ -121,7 +121,7 @@ A robust, secure, and scalable RESTful API built with **Node.js**, **Express.js*
 
 
 5. **Access the API Documentation:**
-   ```Open your browser and navigate to [http://localhost:5000/api-docs](http://localhost:5000/api-docs) to view the Swagger UI documentation.```
+   ```Open your browser and navigate to [http://localhost:5000/api-docs] to view the Swagger UI documentation.```
 
 ---
 

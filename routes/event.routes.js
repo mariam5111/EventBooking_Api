@@ -1,5 +1,6 @@
 const express = require("express");
 const eventController = require("../controllers/event.controller");
+const { upload } = require('../middleware/upload');
 const {
   createEventValidation,
   updateEventValidation,
@@ -52,7 +53,7 @@ router.get("/:id", eventController.getEvent);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
@@ -60,6 +61,7 @@ router.get("/:id", eventController.getEvent);
  *               - details
  *               - date
  *               - totalSeats
+ *               - images
  *             properties:
  *               title:
  *                 type: string
@@ -70,9 +72,16 @@ router.get("/:id", eventController.getEvent);
  *                 format: date-time
  *               totalSeats:
  *                 type: integer
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
  *     responses:
  *       201:
  *         description: Event created
+ *       400:
+ *         description: No images uploaded
  *       403:
  *         description: Forbidden
  */
@@ -80,29 +89,30 @@ router.post(
   "/",
   protect,
   restrictTo("Organizer", "Admin"),
+  upload.array('images', 5),
   createEventValidation,
   eventController.createEvent
 );
-
 /**
  * @swagger
- * /events/{id}:
- *   put:
- *     summary: Update an event (Organizer/Admin only)
+ * /events:
+ *   post:
+ *     summary: Create a new event (Organizer/Admin only)
  *     tags: [Events]
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
  *     requestBody:
+ *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
+ *             required:
+ *               - title
+ *               - details
+ *               - date
+ *               - totalSeats
+ *               - images
  *             properties:
  *               title:
  *                 type: string
@@ -113,11 +123,16 @@ router.post(
  *                 format: date-time
  *               totalSeats:
  *                 type: integer
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
  *     responses:
- *       200:
- *         description: Event updated
- *       404:
- *         description: Event not found
+ *       201:
+ *         description: Event created
+ *       400:
+ *         description: No images uploaded
  *       403:
  *         description: Forbidden
  */
@@ -125,6 +140,7 @@ router.put(
   "/:id",
   protect,
   restrictTo("Organizer", "Admin"),
+  upload.array('images', 5),
   updateEventValidation,
   eventController.updateEvent
 );

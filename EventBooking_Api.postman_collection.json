@@ -345,7 +345,7 @@
             "header": [
               {
                 "key": "Content-Type",
-                "value": "application/json"
+                "value": "multipart/form-data"
               },
               {
                 "key": "Authorization",
@@ -353,9 +353,14 @@
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Tech Conference 2026\",\n  \"details\": \"A conference about the latest in tech.\",\n  \"date\": \"2026-12-01T10:00:00.000Z\",\n  \"totalSeats\": 100\n}"
-            },
+              "mode": "form-data",
+                "formdata": [
+               {"key": "title", "value": "Tech Conference 2026", "type": "text"},
+               {"key": "details", "value": "A conference about the latest in tech.", "type": "text"},
+               {"key": "date", "value": "2026-12-01T10:00:00.000Z", "type": "text"},
+               {"key": "totalSeats", "value": "100", "type": "text"},
+               {"key": "images", "value": "", "type": "file"}
+      ] },
             "url": {
               "raw": "{{baseUrl}}/events",
               "host": [
@@ -376,7 +381,7 @@
             "header": [
               {
                 "key": "Content-Type",
-                "value": "application/json"
+                "value": "multipart/form-data"
               },
               {
                 "key": "Authorization",
@@ -384,8 +389,11 @@
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"totalSeats\": 150\n}"
+              "mode": "form-data",
+              "formdata": [
+                {"key": "totalSeats", "value": "150", "type": "text"},
+                {"key": "images", "value": "", "type": "file"}
+           ]
             },
             "url": {
               "raw": "{{baseUrl}}/events/{{eventId}}",
