@@ -14,11 +14,41 @@ const router = express.Router();
  * @swagger
  * /events:
  *   get:
- *     summary: Get all events (public)
+ *     summary: Get all events with search, filter, pagination (public)
  *     tags: [Events]
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search by title or details (case-insensitive)
+ *       - in: query
+ *         name: fromDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Filter events from this date (YYYY-MM-DD)
+ *       - in: query
+ *         name: toDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Filter events up to this date (YYYY-MM-DD)
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of events per page
  *     responses:
  *       200:
- *         description: List of events
+ *         description: List of events with pagination
  */
 router.get("/", eventController.getAllEvents);
 

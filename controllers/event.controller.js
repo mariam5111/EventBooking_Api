@@ -16,18 +16,29 @@ const createEvent = async (req, res, next) => {
 
 const getAllEvents = async (req, res, next) => {
   try {
-    const events = await eventService.getAllEvents();
+    const filters = {
+      search: req.query.search,
+      fromDate: req.query.fromDate,
+      toDate: req.query.toDate,
+      page: parseInt(req.query.page) || 1,
+      limit: parseInt(req.query.limit) || 10,
+    };
+
+    const result = await eventService.getAllEvents(filters);
 
     res.status(200).json({
       success: true,
-      results: events.length,
-      data: events,
+      data: result.results,
+      pagination: {
+        total: result.total,
+        page: result.page,
+        totalPages: result.totalPages,
+      },
     });
   } catch (error) {
     next(error);
   }
 };
-
 const getEvent = async (req, res, next) => {
   try {
     const event = await eventService.getEventById(req.params.id);

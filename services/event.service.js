@@ -26,9 +26,44 @@ const createEvent = async (eventData, userId, files) => {
   return event;
 };
 
-const getAllEvents = async () => {
-  const events = await Event.find().sort({ date: 1 });
-  return events;
+const getAllEvents = async (filters = {}) => {
+  const { search, fromDate, toDate, page = 1, limit = 10 } = filters;
+
+  
+  const query = {};
+
+  
+  if (search) {
+    query.$or = [
+      { title: { $regex: search, $options: 'i' } },
+      { details: { $regex: search, $options: 'i' } },
+    ];
+  }
+
+  
+  if (fromDate || toDate) {
+    query.date = {};
+    if (fromDate) query.date.$gte = new Date(fromDate);
+    if (toDate) query.date.$lte = new Date(toDate);
+  }
+
+  const skip = (page - 1) * limit;
+
+ 
+  const events = await Event.find(query)
+    .sort({ date: 1 })
+    .skip(skip)
+    .limit(limit);
+
+  
+  const total = await Event.countDocuments(query);
+
+  return {
+    results: events,
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+  };
 };
 
 const getEventById = async (eventId) => {

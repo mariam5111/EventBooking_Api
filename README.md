@@ -52,6 +52,7 @@ A robust, secure, and scalable RESTful API built with **Node.js**, **Express.js*
 │   ├── errorHandler.js
 │   ├── protect.js
 |   ├── validate.js
+|   ├── upload.js
 │   └── restrictTo.js
 ├── models/
 │   ├── booking.model.js
