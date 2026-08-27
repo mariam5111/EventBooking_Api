@@ -2,7 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const AppError = require('../utils/appError');
 
-// إعداد التخزين
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
   },
 });
 
-// التحقق من نوع الملف
+
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|gif|webp/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -26,16 +26,16 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// إعداد multer
+
 const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024, // حد أقصى 5 ميجابايت لكل صورة
+    fileSize: 5 * 1024 * 1024, 
   },
 });
 
-// دالة للتحقق من أبعاد الصورة باستخدام sharp
+
 const validateImageDimensions = async (filePath, minWidth = 300, minHeight = 300) => {
   const sharp = require('sharp');
   const metadata = await sharp(filePath).metadata();

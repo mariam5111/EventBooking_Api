@@ -44,6 +44,9 @@ const eventSchema = new mongoose.Schema(
   }
 );
 
+eventSchema.index({ date: 1 });
+eventSchema.index({ title: 'text', details: 'text' });
+
 eventSchema.pre("validate", function () {
   if (this.isNew && this.availableSeats === undefined) {
     this.availableSeats = this.totalSeats;

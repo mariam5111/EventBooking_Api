@@ -34,10 +34,7 @@ const getAllEvents = async (filters = {}) => {
 
   
   if (search) {
-    query.$or = [
-      { title: { $regex: search, $options: 'i' } },
-      { details: { $regex: search, $options: 'i' } },
-    ];
+    query.$text = { $search: search };
   }
 
   
