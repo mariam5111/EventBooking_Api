@@ -1,16 +1,16 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const bookingSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
 
     event: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Event",
+      ref: 'Event',
       required: true,
     },
 
@@ -22,8 +22,8 @@ const bookingSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["confirmed", "cancelled"],
-      default: "confirmed",
+      enum: ['confirmed', 'cancelled'],
+      default: 'confirmed',
     },
   },
   {
@@ -31,4 +31,4 @@ const bookingSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Booking", bookingSchema);
+module.exports = mongoose.model('Booking', bookingSchema);

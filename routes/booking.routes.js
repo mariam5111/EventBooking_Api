@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 
 const router = express.Router();
 
@@ -10,15 +10,15 @@ const {
   updateBooking,
   cancelBooking,
   deleteBooking,
-} = require("../controllers/booking.controller");
+} = require('../controllers/booking.controller');
 
 const {
   createBookingValidator,
   updateBookingValidator,
-} = require("../validators/booking.validator");
+} = require('../validators/booking.validator');
 
-const protect = require("../middleware/protect");
-const restrictTo = require("../middleware/restrictTo");
+const protect = require('../middleware/protect');
+const restrictTo = require('../middleware/restrictTo');
 
 /**
  * @swagger
@@ -51,7 +51,7 @@ const restrictTo = require("../middleware/restrictTo");
  *         description: Event not found
  */
 router.post(
-  "/",
+  '/',
   protect,
   createBookingValidator,
   createBooking
@@ -70,7 +70,7 @@ router.post(
  *         description: List of user bookings
  */
 router.get(
-  "/my-bookings",
+  '/my-bookings',
   protect,
   getMyBookings
 );
@@ -98,7 +98,7 @@ router.get(
  *         description: Booking not found
  */
 router.get(
-  "/:id",
+  '/:id',
   protect,
   getBookingById
 );
@@ -118,9 +118,9 @@ router.get(
  *         description: Forbidden
  */
 router.get(
-  "/",
+  '/',
   protect,
-  restrictTo("Admin"),
+  restrictTo('Admin'),
   getAllBookings
 );
 
@@ -158,7 +158,7 @@ router.get(
  *         description: Booking not found
  */
 router.put(
-  "/:id",
+  '/:id',
   protect,
   updateBookingValidator,
   updateBooking
@@ -187,7 +187,7 @@ router.put(
  *         description: Booking not found
  */
 router.patch(
-  "/:id/cancel",
+  '/:id/cancel',
   protect,
   cancelBooking
 );
@@ -215,9 +215,9 @@ router.patch(
  *         description: Booking not found
  */
 router.delete(
-  "/:id",
+  '/:id',
   protect,
-  restrictTo("Admin"),
+  restrictTo('Admin'),
   deleteBooking
 );
 

@@ -1,12 +1,12 @@
-const express = require("express");
-const eventController = require("../controllers/event.controller");
+const express = require('express');
+const eventController = require('../controllers/event.controller');
 const { upload } = require('../middleware/upload');
 const {
   createEventValidation,
   updateEventValidation,
-} = require("../validators/event.validator");
-const protect = require("../middleware/protect");
-const restrictTo = require("../middleware/restrictTo");
+} = require('../validators/event.validator');
+const protect = require('../middleware/protect');
+const restrictTo = require('../middleware/restrictTo');
 
 const router = express.Router();
 
@@ -50,7 +50,7 @@ const router = express.Router();
  *       200:
  *         description: List of events with pagination
  */
-router.get("/", eventController.getAllEvents);
+router.get('/', eventController.getAllEvents);
 
 /**
  * @swagger
@@ -70,7 +70,7 @@ router.get("/", eventController.getAllEvents);
  *       404:
  *         description: Event not found
  */
-router.get("/:id", eventController.getEvent);
+router.get('/:id', eventController.getEvent);
 
 /**
  * @swagger
@@ -116,9 +116,9 @@ router.get("/:id", eventController.getEvent);
  *         description: Forbidden
  */
 router.post(
-  "/",
+  '/',
   protect,
-  restrictTo("Organizer", "Admin"),
+  restrictTo('Organizer', 'Admin'),
   upload.array('images', 5),
   createEventValidation,
   eventController.createEvent
@@ -167,9 +167,9 @@ router.post(
  *         description: Forbidden
  */
 router.put(
-  "/:id",
+  '/:id',
   protect,
-  restrictTo("Organizer", "Admin"),
+  restrictTo('Organizer', 'Admin'),
   upload.array('images', 5),
   updateEventValidation,
   eventController.updateEvent
@@ -198,9 +198,9 @@ router.put(
  *         description: Forbidden
  */
 router.delete(
-  "/:id",
+  '/:id',
   protect,
-  restrictTo("Organizer", "Admin"),
+  restrictTo('Organizer', 'Admin'),
   eventController.deleteEvent
 );
 

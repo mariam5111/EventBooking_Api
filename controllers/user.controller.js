@@ -1,5 +1,5 @@
-const userService = require("../services/user.service");
-const AppError = require("../utils/appError");
+const userService = require('../services/user.service');
+const AppError = require('../utils/appError');
 
 
 const register = async (req, res, next) => {
@@ -8,7 +8,7 @@ const register = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: "User registered successfully",
+      message: 'User registered successfully',
       data: user,
     });
   } catch (error) {
@@ -23,7 +23,7 @@ const login = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: "Login successful",
+      message: 'Login successful',
       data: result,
     });
   } catch (error) {
@@ -35,12 +35,12 @@ const refresh = async (req, res, next) => {
   try {
     const { refreshToken } = req.body;
     if (!refreshToken) {
-      return next(new AppError("Refresh token is required", 400));
+      return next(new AppError('Refresh token is required', 400));
     }
     const result = await userService.refreshAccessToken(refreshToken);
     res.status(200).json({
       success: true,
-      message: "Token refreshed successfully",
+      message: 'Token refreshed successfully',
       data: result,
     });
   } catch (error) {

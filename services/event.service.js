@@ -1,8 +1,8 @@
-const Event = require("../models/event.model");
-const AppError = require("../utils/appError");
+const Event = require('../models/event.model');
+const AppError = require('../utils/appError');
 
 const createEvent = async (eventData, userId, files) => {
-   if (!files || files.length === 0) {
+  if (!files || files.length === 0) {
     throw new AppError('At least one image is required for the event', 400);
   }
 
@@ -66,7 +66,7 @@ const getAllEvents = async (filters = {}) => {
 const getEventById = async (eventId) => {
   const event = await Event.findById(eventId);
   if (!event) {
-    throw new AppError("Event not found", 404);
+    throw new AppError('Event not found', 404);
   }
   
   return event;
@@ -75,10 +75,10 @@ const getEventById = async (eventId) => {
 const updateEvent = async (eventId, updateData, userId, userRole, files) => {
   const event = await Event.findById(eventId);
   if (!event) {
-    throw new AppError("Event not found", 404);
+    throw new AppError('Event not found', 404);
   }
-   if (userRole !== "Admin" && event.createdBy.toString() !== userId.toString()) {
-    throw new AppError("You are not authorized to update this event", 403);
+  if (userRole !== 'Admin' && event.createdBy.toString() !== userId.toString()) {
+    throw new AppError('You are not authorized to update this event', 403);
   }
 
 
@@ -101,7 +101,7 @@ const updateEvent = async (eventId, updateData, userId, userRole, files) => {
     event.availableSeats = totalSeats - seatsTaken;
     event.totalSeats = totalSeats;
   }
-    if (files && files.length > 0) {
+  if (files && files.length > 0) {
     const newImageUrls = files.map(file => `/uploads/${file.filename}`);
     event.images = [...event.images, ...newImageUrls];
     if (!event.coverImage) {
@@ -116,11 +116,11 @@ const updateEvent = async (eventId, updateData, userId, userRole, files) => {
 const deleteEvent = async (eventId, userId, userRole) => {
   const event = await Event.findById(eventId);
   if (!event) {
-    throw new AppError("Event not found", 404);
+    throw new AppError('Event not found', 404);
   }
 
-  if (userRole !== "Admin" && event.createdBy.toString() !== userId.toString()) {
-    throw new AppError("You are not authorized to delete this event", 403);
+  if (userRole !== 'Admin' && event.createdBy.toString() !== userId.toString()) {
+    throw new AppError('You are not authorized to delete this event', 403);
   }
 
   await event.deleteOne();

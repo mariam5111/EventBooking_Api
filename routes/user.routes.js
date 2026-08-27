@@ -1,7 +1,7 @@
-const express = require("express");
-const userController = require("../controllers/user.controller");
-const { registerValidation, loginValidation } = require("../validators/user.validator");
-const protect = require("../middleware/protect");
+const express = require('express');
+const userController = require('../controllers/user.controller');
+const { registerValidation, loginValidation } = require('../validators/user.validator');
+const protect = require('../middleware/protect');
 
 const router = express.Router();
 
@@ -40,7 +40,7 @@ const router = express.Router();
  *       400:
  *         description: Validation error
  */
-router.post("/register", registerValidation, userController.register);
+router.post('/register', registerValidation, userController.register);
 
 /**
  * @swagger
@@ -86,7 +86,7 @@ router.post("/register", registerValidation, userController.register);
  *       401:
  *         description: Invalid credentials
  */
-router.post("/login", loginValidation, userController.login);
+router.post('/login', loginValidation, userController.login);
 
 /**
  * @swagger
@@ -124,7 +124,7 @@ router.post("/login", loginValidation, userController.login);
  *       401:
  *         description: Invalid or expired refresh token
  */
-router.post("/refresh", userController.refresh);
+router.post('/refresh', userController.refresh);
 
 /**
  * @swagger
@@ -140,6 +140,6 @@ router.post("/refresh", userController.refresh);
  *       401:
  *         description: Not authenticated
  */
-router.get("/profile", protect, userController.getProfile);
+router.get('/profile', protect, userController.getProfile);
 
 module.exports = router;

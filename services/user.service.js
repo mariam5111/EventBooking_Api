@@ -1,7 +1,7 @@
-const User = require("../models/user.model");
-const AppError = require("../utils/appError");
-const jwt = require("jsonwebtoken"); 
-const { generateToken, generateRefreshToken } = require("../utils/generateToken"); 
+const User = require('../models/user.model');
+const AppError = require('../utils/appError');
+const jwt = require('jsonwebtoken'); 
+const { generateToken, generateRefreshToken } = require('../utils/generateToken'); 
 
 const registerUser = async (userData) => {
   const { name, email, password } = userData;
@@ -9,7 +9,7 @@ const registerUser = async (userData) => {
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
-    throw new AppError("Email is already registered", 409);
+    throw new AppError('Email is already registered', 409);
   }
 
 
@@ -17,7 +17,7 @@ const registerUser = async (userData) => {
     name,
     email,
     password,
-    role: "User",
+    role: 'User',
   });
 
 
@@ -30,19 +30,19 @@ const registerUser = async (userData) => {
 const loginUser = async ({ email, password }) => {
 
   if (!email || !password) {
-    throw new AppError("Please provide email and password", 400);
+    throw new AppError('Please provide email and password', 400);
   }
 
 
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email }).select('+password');
   if (!user) {
-    throw new AppError("Invalid email or password", 401);
+    throw new AppError('Invalid email or password', 401);
   }
 
 
   const isCorrectPassword = await user.comparePassword(password);
   if (!isCorrectPassword) {
-    throw new AppError("Invalid email or password", 401);
+    throw new AppError('Invalid email or password', 401);
   }
 
  
@@ -62,19 +62,19 @@ const refreshAccessToken = async (refreshToken) => {
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
     const user = await User.findById(decoded.id);
     if (!user) {
-      throw new AppError("User not found", 401);
+      throw new AppError('User not found', 401);
     }
     const newAccessToken = generateToken(user._id, user.role);
     return { token: newAccessToken };
   } catch (error) {
-    throw new AppError("Invalid or expired refresh token", 401);
+    throw new AppError('Invalid or expired refresh token', 401);
   }
 };
 
 const getUserById = async (userId) => {
   const user = await User.findById(userId);
   if (!user) {
-    throw new AppError("User not found", 404);
+    throw new AppError('User not found', 404);
   }
   return user;
 };

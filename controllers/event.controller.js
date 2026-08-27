@@ -1,4 +1,4 @@
-const eventService = require("../services/event.service");
+const eventService = require('../services/event.service');
 
 const createEvent = async (req, res, next) => {
   try {
@@ -6,7 +6,7 @@ const createEvent = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: "Event created successfully",
+      message: 'Event created successfully',
       data: event,
     });
   } catch (error) {
@@ -64,7 +64,7 @@ const updateEvent = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: "Event updated successfully",
+      message: 'Event updated successfully',
       data: event,
     });
   } catch (error) {
@@ -82,7 +82,7 @@ const deleteEvent = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: "Event deleted successfully",
+      message: 'Event deleted successfully',
       data: null,
     });
   } catch (error) {

@@ -1,6 +1,6 @@
-const Booking = require("../models/booking.model");
-const Event = require("../models/event.model");
-const AppError = require("../utils/appError");
+const Booking = require('../models/booking.model');
+const Event = require('../models/event.model');
+const AppError = require('../utils/appError');
 
 const createBooking = async (userId, eventId, seats) => {
   
@@ -22,10 +22,10 @@ const createBooking = async (userId, eventId, seats) => {
   if (!event) {
     const existingEvent = await Event.findById(eventId);
     if (!existingEvent) {
-      throw new AppError("Event not found", 404);
+      throw new AppError('Event not found', 404);
     }
     if (existingEvent.availableSeats < seats) {
-      throw new AppError("Not enough available seats", 400);
+      throw new AppError('Not enough available seats', 400);
     }
   }
 
@@ -35,7 +35,7 @@ const createBooking = async (userId, eventId, seats) => {
       user: userId,
       event: eventId,
       seats,
-      status: "confirmed",
+      status: 'confirmed',
     });
     return booking;
   } catch (error) {
@@ -49,30 +49,30 @@ const createBooking = async (userId, eventId, seats) => {
 
 const getMyBookings = async (userId) => {
   return await Booking.find({ user: userId })
-    .populate("event")
-    .populate("user", "name email role")
+    .populate('event')
+    .populate('user', 'name email role')
     .sort({ createdAt: -1 });
 };
 
 const getBookingById = async (id) => {
-  return await Booking.findById(id).populate("event");
+  return await Booking.findById(id).populate('event');
 };
 
 const getAllBookings = async () => {
   return await Booking.find()
-    .populate("event")
-    .populate("user", "name email role")
+    .populate('event')
+    .populate('user', 'name email role')
     .sort({ createdAt: -1 });
 };
 
-const updateBooking = async (bookingId, userId, role, newSeats) => {
+const updateBooking = async (bookingId, newSeats) => {
   const booking = await Booking.findById(bookingId);
   if (!booking) {
-    throw new AppError("Booking not found", 404);
+    throw new AppError('Booking not found', 404);
   }
 
-  if (booking.status === "cancelled") {
-    throw new AppError("Cancelled booking cannot be updated", 400);
+  if (booking.status === 'cancelled') {
+    throw new AppError('Cancelled booking cannot be updated', 400);
   }
 
   const difference = newSeats - booking.seats;
@@ -91,7 +91,7 @@ const updateBooking = async (bookingId, userId, role, newSeats) => {
     );
 
     if (!event) {
-      throw new AppError("Not enough available seats", 400);
+      throw new AppError('Not enough available seats', 400);
     }
   } else if (difference < 0) {
  
@@ -107,14 +107,14 @@ const updateBooking = async (bookingId, userId, role, newSeats) => {
   return booking;
 };
 
-const cancelBooking = async (bookingId, userId, role) => {
+const cancelBooking = async (bookingId) => {
   const booking = await Booking.findById(bookingId);
   if (!booking) {
-    throw new AppError("Booking not found", 404);
+    throw new AppError('Booking not found', 404);
   }
 
-  if (booking.status === "cancelled") {
-    throw new AppError("Booking is already cancelled", 400);
+  if (booking.status === 'cancelled') {
+    throw new AppError('Booking is already cancelled', 400);
   }
 
   
@@ -127,11 +127,11 @@ const cancelBooking = async (bookingId, userId, role) => {
   );
 
   if (!event) {
-    throw new AppError("Event not found", 404);
+    throw new AppError('Event not found', 404);
   }
 
   
-  booking.status = "cancelled";
+  booking.status = 'cancelled';
   await booking.save();
 
   return booking;
@@ -140,11 +140,11 @@ const cancelBooking = async (bookingId, userId, role) => {
 const deleteBooking = async (bookingId) => {
   const booking = await Booking.findById(bookingId);
   if (!booking) {
-    throw new AppError("Booking not found", 404);
+    throw new AppError('Booking not found', 404);
   }
 
 
-  if (booking.status === "confirmed") {
+  if (booking.status === 'confirmed') {
     await Event.findByIdAndUpdate(booking.event, {
       $inc: { availableSeats: booking.seats },
     });
